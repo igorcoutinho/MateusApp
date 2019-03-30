@@ -18,37 +18,33 @@ namespace Mateus.Controllers
         public async Task<IActionResult> Index()
         {
 
-            //IFirebaseConfig config = new FirebaseConfig
-            //{
-            //    AuthSecret = "hjrYW5sNhzAfbkPG1b6uyMqAMNP2AkvRWygBfz9i",
-            //    BasePath = "https://app-mateus.firebaseio.com"
-            //};
-
-            //IFirebaseClient client = new FirebaseClient(config);
-
-            //var produto = new Produto
-            //{
-            //    Nome ="Celular",
-            //    Disponibilidade = false,
-            //     Valor = 1
-            //};
-
-            //SetResponse response = await client.SetAsync("produto/"+produto.Nome, produto);
-            //Produto result = response.ResultAs<Produto>();
-
             VendaViewModel model = new VendaViewModel();
 
+
             await model.CarregarDados(this);
-            //FirebaseResponse response = await client.UpdateAsync("produto/"+produto.Nome, produto);
-            //Produto result = response.ResultAs<Produto>();
 
-            //FirebaseResponse response = await client.GetAsync("produto/Celular");
-            //var result = response.ResultAs<Produto>();
+            var listaProdutos = model.ListaProduto;
+           
 
-            //FirebaseResponse response = await client.GetAsync("produto");
 
-            //var produtos = (JsonConvert.DeserializeObject(response.Body, typeof(List<Produto>)) as List<Produto>);
-            //var teste = "";
+            for (int i = 0; i < 10; i++)
+            {
+                model.PreencherCarrinho(this);
+            }
+            if (ModelState.IsValid)
+            {
+                var itensDoCarrinho = model.ListaCarrinho;
+                var listaEstoqueAtualizada = model.Estoque;
+
+            }
+            else
+            {
+                var mensagem = model.Mensagem;
+            }
+
+
+
+
             return View("~/Views/Venda.cshtml", model);
         }
 
