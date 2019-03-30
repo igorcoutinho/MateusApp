@@ -21,81 +21,236 @@ namespace Mateus.Models
 
             public int Id { get; set; }
 
-            public string Produto { get; set; }
+            public int IdProduto { get; set; }
 
-            public double Valor { get; set; }
-           
+            public int QntComprada { get; set; }
+
+            public int IdFilial { get; set; }
+            
+        }
+
+        public class Filial
+        {
+            public int Id { get; set; }
+
+            public string Nome { get; set; }
+
 
         }
 
-        public List<Carrinho> ListaProduto { get; set; } = new List<Carrinho>();
+        public class FilialEstoque
+        {
+            public int Id { get; set; }
 
+            public int IdFilial { get; set; }
+
+            public int IdProduto { get; set; }
+
+            public int QntProduto { get; set; }
+        }
+
+        public class Produto
+        {
+            public int Id { get; set; }
+
+            public string Nome { get; set; }
+
+            public double Valor { get; set; }
+
+            public bool Disponibilidade { get; set; }
+        }
+
+        public List<Produto> ListaProduto { get; set; } = new List<Produto>();
+
+        public List<Filial> ListaFiliais { get; set; } = new List<Filial>();
+
+        public List<FilialEstoque> Estoque { get; set; } = new List<FilialEstoque>();
+
+        public List<Carrinho> ListaCarrinho { get; set; } = new List<Carrinho>();
 
         public async Task<JsonResult> CarregarDados(Controller controller)
         {
 
-            IFirebaseConfig config = new FirebaseConfig
-            {
-                AuthSecret = "hjrYW5sNhzAfbkPG1b6uyMqAMNP2AkvRWygBfz9i",
-                BasePath = "https://app-mateus.firebaseio.com"
-            };
-
-            IFirebaseClient client = new FirebaseClient(config);
 
             int auxId = 0;
 
-            var item = new Carrinho
+            #region Criando Prudutos
+
+            //produtos adicionados estaticamente. Lista Produto contem todos os produtos
+            var item = new Produto
             {
                 Id = 1,
-                Produto = "Primeiro",
-                Valor= 30.00
+                Nome = "Carne",
+                Valor= 30.00,
+                Disponibilidade =  true
             };
 
             auxId++;
             ListaProduto.Add(item);
 
-            var item2 = new Carrinho
+            var item2 = new Produto
             {
                 Id = auxId,
-                Produto = "Segundo",
-                Valor = 5.20
+                Nome = "Shampoo",
+                Valor = 6.00,
+                Disponibilidade = true
             };
 
             auxId++;
             ListaProduto.Add(item2);
 
 
-            var item3 = new Carrinho
+            var item3 = new Produto
             {
                 Id = auxId,
-                Produto = "Terceiro",
-                Valor = 6.20
+                Nome = "Arroz",
+                Valor = 6.00,
+                Disponibilidade = true
+            };
+            auxId++;
+            ListaProduto.Add(item3);
+
+            var item4 = new Produto
+            {
+                Id = auxId,
+                Nome = "Feijao",
+                Valor = 7.00,
+                Disponibilidade = true
+            };
+            auxId++;
+            ListaProduto.Add(item4);
+
+            var item5 = new Produto
+            {
+                Id = auxId,
+                Nome = "Macarrao",
+                Valor = 2.50,
+                Disponibilidade = true
+            };
+            auxId++;
+            ListaProduto.Add(item5);
+
+            #endregion Criando Produtos
+
+            #region Criar as filiais
+
+            var filial = new Filial
+            {
+                Id = 1,
+                Nome =  "São Luís",
+
             };
 
-            ListaProduto.Add(item3);
+            ListaFiliais.Add(filial);
+
+
+            var filial2 = new Filial
+            {
+                Id = 2,
+                Nome = "Maiobão",
+
+            };
+
+            ListaFiliais.Add(filial2);
+
+
+            var filial3 = new Filial
+            {
+                Id = 3,
+                Nome = "Raposa",
+
+            };
+
+            ListaFiliais.Add(filial3);
+
+            #endregion
+
+            #region Criando um estoque
+
 
             foreach (var produto in ListaProduto.ToList())
             {
-                FirebaseResponse responseBuscar = await client.GetTaskAsync("produto/" + produto.Produto);
+               
+                //Os produtos so serao adicionados no estoque se estiverem disponiveis.
+                //Eles podem existem no "banco" pórem podem não estar disponiveis atualmente
 
-                bool hasProdutoBanco = responseBuscar.ResultAs<bool>();
-                if (hasProdutoBanco)
+                int auxEstoque = 1;
+                if (produto.Disponibilidade)
                 {
-                    FirebaseResponse responseUpdate = await client.UpdateTaskAsync("produto/" + produto.Produto, produto);
-                    Produto result = responseUpdate.ResultAs<Produto>();
+                    //Para cada filial sera adicionado
+                    foreach (var itemFilial in ListaFiliais) {
+                        var itemEstoque = new FilialEstoque
+                        {
+                            Id = auxEstoque,
+                            IdFilial = itemFilial.Id,
+                            IdProduto = produto.Id,
+                            QntProduto = RandomNumber(0, 50)
+                        };
+                        auxEstoque++;
+                        Estoque.Add(itemEstoque);
+                    }
 
                 }
-                else
-                {
-                    FirebaseResponse responseSet = await client.SetTaskAsync("produto/" + produto.Produto, produto);
-                    Produto result = responseSet.ResultAs<Produto>();
-                }
-                Console.WriteLine($"{produto.Produto} e valor {produto.Valor}");
-
-                Valor = produto.Valor + Valor;
 
             }
+
+            #endregion
+
+
             return null;
+        }
+
+        public JsonResult PreencherCarrinho(Controller controller)
+        {
+            //Para simular uma possivel consulta no banco. no caso as Listas receberiam de um query, select.. etc
+            var qntProdutosListadosBanco = ListaProduto.Count();
+            var qntFilais = ListaFiliais.Count();
+
+            //Os Ids de carrinho são gerados de 1 a 10000 pra diminuir a probabilidade de se repetir.
+            var idItemCarrinho = RandomNumber(1, 10000);
+
+            //Uma verificacao caso seja igual. Como não tem um banco de dados que trave isto por Id, dessa forma diminuo a probabilidade
+            //de dar errado ao quadrado
+            if (ListaCarrinho.Any(a => a.Id == idItemCarrinho))
+            {
+                idItemCarrinho = RandomNumber(1, 10000);
+            }
+            var idProduto = RandomNumber(1, qntProdutosListadosBanco);
+            var idFilial = RandomNumber(1, qntFilais);
+            var produto = ListaProduto.FirstOrDefault(p => p.Id == idProduto);
+            var itemEstoque = Estoque.FirstOrDefault(x => x.IdProduto == idProduto && x.IdFilial == idFilial);
+
+            var itemCarrinho = new Carrinho
+            {
+                Id = idItemCarrinho,
+                IdProduto = idProduto,
+                QntComprada = RandomNumber(1, itemEstoque.QntProduto),
+                IdFilial = idFilial
+
+            };
+            ListaCarrinho.Add(itemCarrinho);
+
+            //para facilitar o codigo será considerado o estoque será considerado como se fosse uma prateleira apenas e a medida que o cliente pega o item,
+            //o mesmo é decrementado da quantidade do estoque.
+
+
+            //var result = Estoque.FirstOrDefault(x=> x.Id == itemEstoque.Id).Select(i => 
+            //{
+            //    i. = itemEstoque.QntProduto - itemCarrinho.QntComprada
+               
+            //}).ToList();
+
+
+            //.FirstOrDefault(x => x.Id == itemCarrinho.Id).QntProduto = Estoque.FirstOrDefault(x => x.Id == itemCarrinho.Id).QntProduto - itemEstoque.QntProduto;
+
+
+            return null;
+        }
+
+        public int RandomNumber(int min, int max)
+        {
+            Random random = new Random();
+            return random.Next(min, max);
         }
     }
 
