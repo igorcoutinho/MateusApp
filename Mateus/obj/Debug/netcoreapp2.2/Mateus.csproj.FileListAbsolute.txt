@@ -29,3 +29,4 @@
 /Users/igoralcoutinhogmail.com/Projects/Mateus/Mateus/obj/Debug/netcoreapp2.2/Mateus.pdb
 /Users/igoralcoutinhogmail.com/Projects/Mateus/Mateus/obj/Debug/netcoreapp2.2/Mateus.csproj.CopyComplete
 /Users/igoralcoutinhogmail.com/Projects/Mateus/Mateus/bin/Debug/netcoreapp2.2/wwwroot/js/firebase.js
+/Users/igoralcoutinhogmail.com/Projects/Mateus/Mateus/obj/Debug/netcoreapp2.2/Razor/Views/Venda.g.cshtml.cs

@@ -1,17 +1,20 @@
 ﻿<Properties StartupConfiguration="{4C1D9864-9A4E-484A-BBD7-2324BD5761A3}|Default">
   <MonoDevelop.Ide.ItemProperties.Mateus PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Mateus/Models/Produto.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Mateus/Models/VendaViewModel.cs">
     <Files>
-      <File FileName="Mateus/Controllers/HomeController.cs" Line="30" Column="15" />
-      <File FileName="Mateus/Views/Home/Index.cshtml" Line="6" Column="1" />
-      <File FileName="Mateus/wwwroot/js/firebase.js" Line="1" Column="1" />
-      <File FileName="Mateus/Models/Produto.cs" Line="6" Column="9" />
+      <File FileName="Mateus/Controllers/HomeController.cs" Line="41" Column="22" />
+      <File FileName="Mateus/Models/Produto.cs" Line="1" Column="1" />
+      <File FileName="Mateus/Models/VendaViewModel.cs" Line="42" Column="1" />
+      <File FileName="Mateus/Mateus.csproj" Line="1" Column="1" />
+      <File FileName="Mateus/Views/Venda.cshtml" Line="22" Column="66" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/igoralcoutinhogmail.com/Projects/Mateus/Mateus/Controllers/HomeController.cs" relfile="Mateus/Controllers/HomeController.cs" line="51" column="32" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>
